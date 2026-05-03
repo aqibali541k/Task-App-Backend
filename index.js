@@ -1,23 +1,27 @@
 const express = require("express");
-const app = express();
-require("dotenv").config();
-
-const cors = require("cors");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const dotenv = require("dotenv");
 
-// Middleware
-app.use(cors());
+dotenv.config(); // ✅ VERY IMPORTANT
+
+const app = express();
+
+/* ---------- MIDDLEWARE ---------- */
 app.use(express.json());
 
-// Routes
+app.use(
+    cors({
+        // origin: ["https://bmigo.vercel.app"],
+        // credentials: true,
+    }),
+);
+
+
+/* ---------- ROUTES ---------- */
 const routes = require("./routes/todo");
 const authRoutes = require("./routes/user");
-app.use("/todo", routes);
-app.use("/auth", authRoutes);
-
-// Port
-const PORT = process.env.PORT || 5000;
-
+/* ---------- MONGODB CONNECTION (CACHED) ---------- */
 let cached = global.mongoose;
 
 if (!cached) {
@@ -43,10 +47,13 @@ async function connectDB() {
 // connect on first request
 connectDB();
 
-if (process.env.NODE_ENV !== "production") {
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
-}
+/* ---------- ROUTES ---------- */
+app.use("/todo", routes);
+app.use("/auth", authRoutes);
 
+app.get("/", (req, res) => {
+    res.send("🚀 Server is online");
+});
+
+/* ---------- EXPORT (NO app.listen) ---------- */
 module.exports = app;
