@@ -18,6 +18,6 @@ const todosSchema = new mongoose.Schema({
         enum: ["high", "medium", "low"],
         default: "medium"
     },
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model("Todo", todosSchema);

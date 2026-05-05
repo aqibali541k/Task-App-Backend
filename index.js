@@ -11,10 +11,7 @@ const app = express();
 app.use(express.json());
 
 app.use(
-    cors({
-        // origin: ["https://bmigo.vercel.app"],
-        // credentials: true,
-    }),
+    cors({}),
 );
 
 
@@ -33,7 +30,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 async function connectDB() {
     if (cached.conn) return cached.conn;
 
-    if (!cached.promise) {
+    if (!cached.promise) { // this is used for caching the database connection
         cached.promise = mongoose
             .connect(process.env.MONGO_URL)
             .then((mongoose) => mongoose);

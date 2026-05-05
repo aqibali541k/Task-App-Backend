@@ -25,7 +25,7 @@ router.post("/create", async (req, res) => {
 });
 router.get("/read", async (req, res) => {
     try {
-        const todos = await Todo.find({ userId: req.user.id })
+        const todos = await Todo.find({ userId: req.user.id }).sort({ _id: -1 })
         res.status(200).json({ message: "Todos fetched successfully", todos })
     }
     catch (error) {
